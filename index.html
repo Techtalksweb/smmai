@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-900 text-white">
+<head>
+    <meta charset="UTF-8">
+    <title>SMMAI - Freemium AI</title>
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body class="p-6">
+    <h1 class="text-3xl mb-4">SMMAI: Freemium AI Assistant</h1>
+
+    <div>
+        <h2 class="text-xl">Chat</h2>
+        <input id="chatInput" class="bg-gray-800 p-2 w-full" placeholder="Type a message..." />
+        <button onclick="sendChat()" class="bg-blue-600 px-4 py-2 mt-2">Send</button>
+        <p id="chatResponse" class="mt-4"></p>
+    </div>
+
+    <div class="mt-8">
+        <h2 class="text-xl">Image Generator</h2>
+        <input id="imgPrompt" class="bg-gray-800 p-2 w-full" placeholder="Enter image prompt..." />
+        <button onclick="generateImage()" class="bg-green-600 px-4 py-2 mt-2">Generate</button>
+        <img id="imageResult" class="mt-4 max-w-full" />
+    </div>
+
+    <script>
+        async function sendChat() {
+            const message = document.getElementById('chatInput').value;
+            const res = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ message })
+            });
+            const data = await res.json();
+            document.getElementById('chatResponse').innerText = data.response;
+        }
+
+        async function generateImage() {
+            const prompt = document.getElementById('imgPrompt').value;
+            const res = await fetch('/generate-image', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ prompt })
+            });
+            const data = await res.json();
+            document.getElementById('imageResult').src = data.image_url;
+        }
+    </script>
+</body>
+</html>
